@@ -121,30 +121,46 @@ OUTPUT_ZIP_BIN_FILE_NAME = "TFE_RT_Bin.zip"
 
 
 def mrCopyFile(srcPath, dstPath):
-    print("Copying " + str(dstPath.name) + "...")
+    print("Copying " + str(dstPath.name))
     # need to create directory before copying
     pathlib.Path(dstPath).parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(srcPath, dstPath)
+
+
+def printHelp():
+    print("Usage: MakeReleaseVersion.py <-b> <output folder (optional)> <SeriousSam folder (optional)>")
+    print("")
+    print("  <-b> : only update zip file with binaries")
 
 
 def main():
     outputFolderPath = pathlib.Path(DEFAULT_OUTPUT_FOLDER_NAME)
     ssFolderPath = pathlib.Path(DEFAULT_SS_FOLDER_NAME)
 
-    if len(sys.argv) == 2:
-        outputFolderPath = pathlib.Path(sys.argv[1])
-    elif len(sys.argv) == 3:
-        outputFolderPath = pathlib.Path(sys.argv[1])
-        ssFolderPath = pathlib.Path(sys.argv[2])
-    elif len(sys.argv) > 3 or '--help' in sys.argv or '-help' in sys.argv or '--h' in sys.argv or '-h' in sys.argv:
-        print("Usage: MakeReleaseVersion.py <output .zip file> <SeriousSam folder (optional)>")
+    args = sys.argv[1:]
+
+    if '--help' in args or '-help' in args or '--h' in args or '-h' in args:
+        printHelp()
+        return
+
+    onlyBinUpdate = '-b' in args
+    if onlyBinUpdate:
+        args.remove('-b')
+
+    if len(args) == 1:
+        outputFolderPath = pathlib.Path(args[0])
+    elif len(args) == 2:
+        outputFolderPath = pathlib.Path(args[0])
+        ssFolderPath = pathlib.Path(args[1])
+    elif len(args) > 2:
+        printHelp()
         return
 
     if not ssFolderPath.exists():
         print("Folder " + str(ssFolderPath) + " doesn't exist")
         return
 
-    if outputFolderPath.exists():
+    if not onlyBinUpdate and outputFolderPath.exists():
         print("Folder " + str(outputFolderPath) + " must not exist. Specify a new one")
         return
 
@@ -152,31 +168,32 @@ def main():
         print("Input and output must not be same")
         return
 
-    while True:
-        print("Update \"" + TEXTURES_SS_FOLDER_DESTINATION_FILE + "\" before copying? (Y/N)")
-        answer = input()
-        if answer == 'Y' or answer == 'y':
-            r = subprocess.run(
-                TEXTURES_UPDATE_SCRIPT,
-                capture_output=True,
-                shell=True,
-                cwd=ssFolderPath / pathlib.Path(TEXTURES_UPDATE_SCRIPT_WORKING_FOLDER))
-            if r.returncode != 0:
-                print("Updating textures error. Aborting.")
-                return
-            break
-        elif answer == 'N' or answer == 'n':
-            break
+    if not onlyBinUpdate:
+        while True:
+            print("Update \"" + TEXTURES_SS_FOLDER_DESTINATION_FILE + "\" before copying? (Y/N)")
+            answer = input()
+            if answer == 'Y' or answer == 'y':
+                r = subprocess.run(
+                    TEXTURES_UPDATE_SCRIPT,
+                    capture_output=True,
+                    shell=True,
+                    cwd=ssFolderPath / pathlib.Path(TEXTURES_UPDATE_SCRIPT_WORKING_FOLDER))
+                if r.returncode != 0:
+                    print("Updating textures error. Aborting.")
+                    return
+                break
+            elif answer == 'N' or answer == 'n':
+                break
 
-    mrCopyFile(
-        pathlib.Path(COPY_FROM_WORKING_FOLDER_SOURCE_FILE),
-        outputFolderPath / pathlib.Path(COPY_FROM_WORKING_FOLDER_DESTINATION_FILE)
-    )
+        mrCopyFile(
+            pathlib.Path(COPY_FROM_WORKING_FOLDER_SOURCE_FILE),
+            outputFolderPath / pathlib.Path(COPY_FROM_WORKING_FOLDER_DESTINATION_FILE)
+        )
 
-    mrCopyFile(
-        ssFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_SOURCE_FILE),
-        outputFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_DESTINATION_FILE)
-    )
+        mrCopyFile(
+            ssFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_SOURCE_FILE),
+            outputFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_DESTINATION_FILE)
+        )
 
     with zipfile.ZipFile(outputFolderPath / pathlib.Path(OUTPUT_ZIP_BIN_FILE_NAME), 'w') as outputZip:
         for f in FILES_TO_INCLUDE:
@@ -187,11 +204,15 @@ def main():
                 print("Source file " + str(srcPath) + " doesn't exist. Aborting.")
                 return
 
-            print("Adding " + str(srcFilePath) + "...")
+            print("Adding " + str(srcFilePath))
             outputZip.write(filename=srcPath, arcname=str(srcFilePath))
 
     print("\nDone.")
-    print(str(outputFolderPath.name) + " is formed.")
+
+    if onlyBinUpdate:
+        print(str(outputFolderPath.name) + " formed.")
+    else:
+        print(OUTPUT_ZIP_BIN_FILE_NAME + " updated.")
 
 
 if __name__ == '__main__':
