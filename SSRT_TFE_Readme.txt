@@ -1,6 +1,6 @@
 1) Unzip `TFE_RT_Bin.zip`
 2) Unzip `TFE_RT_Textures.zip` to the same folder
-	* This archive contains upscaled and PBR textures
+	* This archive contains textures (upscaled/PBR)
 3) Copy original Serious Sam: The First Encounter files:
 	* `Levels` folder
 	* `1_00_ExtraTools.gro`
