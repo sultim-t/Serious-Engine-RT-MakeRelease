@@ -23,6 +23,7 @@ import sys
 import pathlib
 import zipfile
 import shutil
+import subprocess
 
 
 FILES_TO_INCLUDE = [
@@ -110,8 +111,11 @@ DEFAULT_OUTPUT_FOLDER_NAME = "../SSRT-TFE"
 COPY_FROM_WORKING_FOLDER_SOURCE_FILE = "SSRT_TFE_Readme.txt"
 COPY_FROM_WORKING_FOLDER_DESTINATION_FILE = "README.txt"
 
-COPY_FROM_SS_FOLDER_SOURCE_FILE = "OverridenTextures\\OverridenTextures.zip"
-COPY_FROM_SS_FOLDER_DESTINATION_FILE = "TFE_RT_Textures.zip"
+TEXTURES_SS_FOLDER_SOURCE_FILE = "OverridenTextures\\OverridenTextures.zip"
+TEXTURES_SS_FOLDER_DESTINATION_FILE = "TFE_RT_Textures.zip"
+
+TEXTURES_UPDATE_SCRIPT_WORKING_FOLDER = "OverridenTextures"
+TEXTURES_UPDATE_SCRIPT = "UpdateTextureZIP.bat"
 
 OUTPUT_ZIP_BIN_FILE_NAME = "TFE_RT_Bin.zip"
 
@@ -148,14 +152,30 @@ def main():
         print("Input and output must not be same")
         return
 
+    while True:
+        print("Update \"" + TEXTURES_SS_FOLDER_DESTINATION_FILE + "\" before copying? (Y/N)")
+        answer = input()
+        if answer == 'Y' or answer == 'y':
+            r = subprocess.run(
+                TEXTURES_UPDATE_SCRIPT,
+                capture_output=True,
+                shell=True,
+                cwd=ssFolderPath / pathlib.Path(TEXTURES_UPDATE_SCRIPT_WORKING_FOLDER))
+            if r.returncode != 0:
+                print("Updating textures error. Aborting.")
+                return
+            break
+        elif answer == 'N' or answer == 'n':
+            break
+
     mrCopyFile(
         pathlib.Path(COPY_FROM_WORKING_FOLDER_SOURCE_FILE),
         outputFolderPath / pathlib.Path(COPY_FROM_WORKING_FOLDER_DESTINATION_FILE)
     )
 
     mrCopyFile(
-        ssFolderPath / pathlib.Path(COPY_FROM_SS_FOLDER_SOURCE_FILE),
-        outputFolderPath / pathlib.Path(COPY_FROM_SS_FOLDER_DESTINATION_FILE)
+        ssFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_SOURCE_FILE),
+        outputFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_DESTINATION_FILE)
     )
 
     with zipfile.ZipFile(outputFolderPath / pathlib.Path(OUTPUT_ZIP_BIN_FILE_NAME), 'w') as outputZip:
