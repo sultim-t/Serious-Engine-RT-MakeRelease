@@ -10,3 +10,6 @@
 	* `1_00c_scripts.gro`
 	* `1_04_patch.gro`
 4) Launch `Bin\SeriousSamTFE.exe`
+
+Warning:
+	* Disable RivaTuner before launching the game (it conflicts with Vulkan)
