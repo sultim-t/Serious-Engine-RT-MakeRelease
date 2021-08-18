@@ -9,5 +9,4 @@
 	* `1_00c_Logo.gro`
 	* `1_00c_scripts.gro`
 	* `1_04_patch.gro`
-	* `1_07_tools.gro`
 4) Launch `Bin\SeriousSamTFE.exe`
