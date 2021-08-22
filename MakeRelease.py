@@ -67,7 +67,7 @@ FILES_TO_INCLUDE = [
     "SE1_10.gro",
     "Levels\\empty",
     "OverridenTextures\\BlueNoise_LDR_RGBA_128.ktx2",
-    "OverridenTextures\\Compressed",
+    "OverridenTextures\\WaterNormal_n.ktx2",
     "Bin\\Game.dll",
     "Bin\\libogg.dll",
     "Bin\\libvorbis.dll",
