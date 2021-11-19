@@ -1,4 +1,4 @@
-1) Unzip `TFE_RT_Bin.zip`
+1) Unzip `TFE_RT_Bin.zip` to an empty folder
 2) Unzip `TFE_RT_Textures.zip` to the same folder
 	* This archive contains textures (upscaled/PBR)
 3) Copy original Serious Sam: The First Encounter files:
@@ -12,4 +12,4 @@
 4) Launch `Bin\SeriousSamTFE.exe`
 
 Warning:
-	* Disable RivaTuner before launching the game (it conflicts with Vulkan)
+	* RivaTuner (or MSI Afterburner) may cause CRASHES, in that case, disabling them should help.

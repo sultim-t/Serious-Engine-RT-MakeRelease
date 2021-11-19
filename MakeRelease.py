@@ -109,6 +109,8 @@ DEFAULT_OUTPUT_FOLDER_NAME = "../SSRT-TFE"
 COPY_FROM_WORKING_FOLDER_SOURCE_FILE = "SSRT_TFE_Readme.txt"
 COPY_FROM_WORKING_FOLDER_DESTINATION_FILE = "README.txt"
 
+CREATE_EMPTY_FILE = "Scripts\\PersistentSymbols.ini"
+
 TEXTURES_SS_FOLDER_SOURCE_FILE = "OverridenTextures\\OverridenTextures.zip"
 TEXTURES_SS_FOLDER_DESTINATION_FILE = "TFE_RT_Textures.zip"
 
@@ -204,6 +206,9 @@ def main():
 
             print("Adding " + str(srcFilePath))
             outputZip.write(filename=srcPath, arcname=str(srcFilePath))
+        # also write an empty file
+        outputZip.writestr(zinfo_or_arcname=CREATE_EMPTY_FILE, data=bytes(0))
+
 
     print("\nDone.")
 
