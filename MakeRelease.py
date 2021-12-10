@@ -75,6 +75,7 @@ FILES_TO_INCLUDE = [
     "Bin\\SeriousSamTFE.exe",
     "Bin\\Engine.dll",
     "Bin\\Entities.dll",
+    "Bin\\nvngx_dlss.dll",
     "Sources\\RTGL1\\Build\\RtRaygenPrimary.rgen.spv",
     "Sources\\RTGL1\\Build\\RtRaygenDirect.rgen.spv",
     "Sources\\RTGL1\\Build\\RtRaygenIndirect.rgen.spv",
