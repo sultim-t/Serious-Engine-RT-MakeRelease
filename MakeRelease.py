@@ -75,7 +75,7 @@ FILES_TO_INCLUDE = [
     "Bin\\SeriousSamTFE.exe",
     "Bin\\Engine.dll",
     "Bin\\Entities.dll",
-    "Bin\\nvngx_dlss.dll",
+    "Bin\\RayTracedGL1.dll",
     "Sources\\RTGL1\\Build\\CmASVGFGradientAtrous.comp.spv",
     "Sources\\RTGL1\\Build\\CmASVGFGradientSamples.comp.spv",
     "Sources\\RTGL1\\Build\\CmASVGFMerging.comp.spv",
