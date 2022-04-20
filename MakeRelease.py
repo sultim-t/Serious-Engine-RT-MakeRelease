@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 
+import os
 import sys
 import pathlib
 import zipfile
@@ -76,43 +77,9 @@ FILES_TO_INCLUDE = [
     "Bin\\Engine.dll",
     "Bin\\Entities.dll",
     "Bin\\RayTracedGL1.dll",
-    "Sources\\RTGL1\\Build\\CmASVGFGradientAtrous.comp.spv",
-    "Sources\\RTGL1\\Build\\CmASVGFGradientSamples.comp.spv",
-    "Sources\\RTGL1\\Build\\CmASVGFMerging.comp.spv",
-    "Sources\\RTGL1\\Build\\CmBloomApply.comp.spv",
-    "Sources\\RTGL1\\Build\\CmBloomDownsample.comp.spv",
-    "Sources\\RTGL1\\Build\\CmBloomUpsample.comp.spv",
-    "Sources\\RTGL1\\Build\\CmCas.comp.spv",
-    "Sources\\RTGL1\\Build\\CmCheckerboard.comp.spv",
-    "Sources\\RTGL1\\Build\\CmComposition.comp.spv",
-    "Sources\\RTGL1\\Build\\CmCullLensFlares.comp.spv",
-    "Sources\\RTGL1\\Build\\CmFsrEasu.comp.spv",
-    "Sources\\RTGL1\\Build\\CmFsrRcas.comp.spv",
-    "Sources\\RTGL1\\Build\\CmLuminanceAvg.comp.spv",
-    "Sources\\RTGL1\\Build\\CmLuminanceHistogram.comp.spv",
-    "Sources\\RTGL1\\Build\\CmSVGFAtrous.comp.spv",
-    "Sources\\RTGL1\\Build\\CmSVGFAtrous_Iter0.comp.spv",
-    "Sources\\RTGL1\\Build\\CmSVGFEstimateVariance.comp.spv",
-    "Sources\\RTGL1\\Build\\CmSVGFTemporalAccumulation.comp.spv",
-    "Sources\\RTGL1\\Build\\CmVertexPreprocess.comp.spv",
-    "Sources\\RTGL1\\Build\\RsDecal.frag.spv",
-    "Sources\\RTGL1\\Build\\RsDecal.vert.spv",
-    "Sources\\RTGL1\\Build\\RsDepthCopying.frag.spv",
-    "Sources\\RTGL1\\Build\\RsFullscreenQuad.vert.spv",
-    "Sources\\RTGL1\\Build\\RsRasterizer.frag.spv",
-    "Sources\\RTGL1\\Build\\RsRasterizer.vert.spv",
-    "Sources\\RTGL1\\Build\\RsRasterizerLensFlare.frag.spv",
-    "Sources\\RTGL1\\Build\\RsRasterizerLensFlare.vert.spv",
-    "Sources\\RTGL1\\Build\\RsRasterizerMultiview.vert.spv",
-    "Sources\\RTGL1\\Build\\RtAlphaTest.rahit.spv",
-    "Sources\\RTGL1\\Build\\RtClsOpaque.rchit.spv",
-    "Sources\\RTGL1\\Build\\RtMiss.rmiss.spv",
-    "Sources\\RTGL1\\Build\\RtMissShadowCheck.rmiss.spv",
-    "Sources\\RTGL1\\Build\\RtRaygenDirect.rgen.spv",
-    "Sources\\RTGL1\\Build\\RtRaygenIndirect.rgen.spv",
-    "Sources\\RTGL1\\Build\\RtRaygenPrimary.rgen.spv",
-    "Sources\\RTGL1\\Build\\RtRaygenReflRefr.rgen.spv",
 ]
+
+SHADERS_FOLDER = "Shaders"
 
 DEFAULT_SS_FOLDER_NAME = "../Serious-Engine-RT"
 DEFAULT_OUTPUT_FOLDER_NAME = "../SSRT-TFE"
@@ -206,8 +173,14 @@ def main():
             outputFolderPath / pathlib.Path(TEXTURES_SS_FOLDER_DESTINATION_FILE)
         )
 
+    filesToInclude = FILES_TO_INCLUDE
+
+    for f in os.listdir(ssFolderPath / pathlib.Path(SHADERS_FOLDER)):
+        if f.endswith(".spv"):
+            filesToInclude.append(SHADERS_FOLDER + "\\" + os.path.basename(f))
+
     with zipfile.ZipFile(outputFolderPath / pathlib.Path(OUTPUT_ZIP_BIN_FILE_NAME), 'w') as outputZip:
-        for f in FILES_TO_INCLUDE:
+        for f in filesToInclude:
             srcFilePath = pathlib.Path(f)
             srcPath = ssFolderPath / srcFilePath
 
